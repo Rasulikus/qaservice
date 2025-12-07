@@ -61,7 +61,7 @@ docker compose up --build
 
 ## Тесты
 ```
-go test ./internal/repository/...
+go test -p 1 ./internal/repository/...
 ```
 Тесты используют реальную базу `qaservice_test` (по умолчанию `postgres://admin:mypassword@localhost:5432`). При необходимости задайте свои переменные окружения перед запуском (см. `internal/repository/testdb`).
 
