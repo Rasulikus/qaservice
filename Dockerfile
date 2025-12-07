@@ -1,0 +1,24 @@
+# ---------- Сборка бинарника ----------
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o qaservice ./cmd/qaservice
+
+FROM alpine:3.22
+
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates
+
+COPY --from=builder /app/qaservice /app/qaservice
+COPY --from=builder /app/migrations /app/migrations
+
+EXPOSE 8081
+
+CMD ["/app/qaservice"]
